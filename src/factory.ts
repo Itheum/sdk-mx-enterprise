@@ -2,11 +2,16 @@ import {
   AbiRegistry,
   Address,
   AddressValue,
+  BigUIntType,
+  BigUIntValue,
   BooleanValue,
+  ContractCallPayloadBuilder,
+  ContractFunction,
   IAddress,
   ResultsParser,
   SmartContract,
-  StringValue
+  StringValue,
+  Transaction
 } from '@multiversx/sdk-core/out';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import {
@@ -217,5 +222,287 @@ export class Factory {
       //   'Error while retrieving the contract pause state'
       // );
     }
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param treasuryAddress The address of the treasury
+   */
+  initializeContract(
+    senderAddress: IAddress,
+    treasuryAddress: IAddress
+  ): Transaction {
+    const initializeContractTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('initializeContract'))
+        .addArg(new AddressValue(treasuryAddress))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return initializeContractTx;
+  }
+
+  /**
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param  code The code of the minter contract
+   * @param version The version of the minter contract
+   */
+  uploadCode(
+    senderAddress: IAddress,
+    code: string,
+    version: string
+  ): Transaction {
+    checkVersionFormat(version);
+    const uploadCodeTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('uploadCode'))
+        .addArg(new StringValue(code))
+        .addArg(new StringValue(version))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return uploadCodeTx;
+  }
+
+  /**
+   *  @param senderAddress The address of the sender, must be the owner of the contract
+   *  @param version The version of the minter contract
+   */
+  removeCode(senderAddress: IAddress, version: string): Transaction {
+    checkVersionFormat(version);
+    const removeCodeTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('removeCode'))
+        .addArg(new StringValue(version))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return removeCodeTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param address The address to whitelist
+   */
+  whitelist(senderAddress: IAddress, address: IAddress): Transaction {
+    const whitelistTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('whitelist'))
+        .addArg(new AddressValue(address))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return whitelistTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param address The address to delist
+   */
+  delist(senderAddress: IAddress, address: IAddress): Transaction {
+    const delistTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('delist'))
+        .addArg(new AddressValue(address))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return delistTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the deployer of the minter contract
+   * @param version The version of the minter contract code
+   */
+  deployContract(senderAddress: IAddress, version: string): Transaction {
+    checkVersionFormat(version);
+    const deployContractTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('deployChildContract'))
+        .addArg(new StringValue(version))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return deployContractTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param childContractAddress The address of the child contract
+   * @param upgradeVersion The version of the minter contract code to upgrade
+   */
+  upgradeChildContract(
+    senderAddress: IAddress,
+    childContractAddress: IAddress,
+    upgradeVersion: string
+  ): Transaction {
+    checkVersionFormat(upgradeVersion);
+    const upgradeChildContractTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('upgradeChildContract'))
+        .addArg(new AddressValue(childContractAddress))
+        .addArg(new StringValue(upgradeVersion))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return upgradeChildContractTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the deployer of the minter contract
+   * @param childContractAddress The address of the child contract
+   */
+  upgradeLastVersion(
+    senderAddress: IAddress,
+    childContractAddress: IAddress
+  ): Transaction {
+    const upgradeChildContractTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('upgradeLastVersion'))
+        .addArg(new AddressValue(childContractAddress))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return upgradeChildContractTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * Note: It change the ownership of the minter contract to the deployer of minter contract
+   */
+  changeOwnership(senderAddress: IAddress): Transaction {
+    const changeOwnershipTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('changeOwnership'))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return changeOwnershipTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param childContractAddress The address of the child contract
+   * @param taxPercentage The tax percentage to set (e.g. 100% = 10000)
+   */
+  setTaxForChildContract(
+    senderAddress: IAddress,
+    childContractAddress: IAddress,
+    taxPercentage: number
+  ): Transaction {
+    const setTaxForChildContractTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('setTaxForChildContract'))
+        .addArg(new AddressValue(childContractAddress))
+        .addArg(new BigUIntValue(taxPercentage))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return setTaxForChildContractTx;
+  }
+
+  /**
+   * Pause contract transaction
+   */
+  pause(): Transaction {
+    const pauseTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('pause'))
+        .build(),
+      sender: this.getContractAddress(),
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return pauseTx;
+  }
+
+  /**
+   * Unpause contract transaction
+   */
+  unpause(): Transaction {
+    const unpauseTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('unpause'))
+        .build(),
+      sender: this.getContractAddress(),
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return unpauseTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param treasuryAddress The address of the treasury
+   */
+  setTreasuryAddress(
+    senderAddress: IAddress,
+    treasuryAddress: IAddress
+  ): Transaction {
+    const setTreasuryAddressTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('setTreasuryAddress'))
+        .addArg(new AddressValue(treasuryAddress))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 1000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return setTreasuryAddressTx;
   }
 }
