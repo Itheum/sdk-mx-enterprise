@@ -1,1 +1,1 @@
-# SDK MX - Data NFT
+# SDK MX - Enterprise
