@@ -104,9 +104,9 @@ export class Factory {
       const returnValue = firstValue?.valueOf();
       const results = returnValue?.map((contract: any) => {
         return {
-          owner: contract.owner,
-          address: contract.address,
-          version: contract.version
+          owner: contract.owner.toString(),
+          address: contract.address.toString(),
+          version: contract.version.toString()
         };
       });
       return results;
@@ -134,9 +134,9 @@ export class Factory {
       const returnValue = firstValue?.valueOf();
       const results = returnValue?.map((contract: any) => {
         return {
-          owner: contract.owner,
-          address: contract.address,
-          version: contract.version
+          owner: contract.owner.toString(),
+          address: contract.address.toString(),
+          version: contract.version.toString()
         };
       });
       return results;
@@ -198,12 +198,12 @@ export class Factory {
   }
 
   /**
-   * Retrieves the code of minter smart contract based on version
+   * Retrieves the code in hex of minter smart contract based on version
    * @param version The version of the minter smart contract
    */
   async viewContractCode(version: string): Promise<string> {
     checkVersionFormat(version);
-    const interaction = this.contract.methodsExplicit.getContractCode([
+    const interaction = this.contract.methodsExplicit.getVersionCode([
       new StringValue(version)
     ]);
     const query = interaction.buildQuery();
@@ -214,7 +214,7 @@ export class Factory {
       endpointDefinition
     );
     if (returnCode.isSuccess()) {
-      const returnValue = firstValue?.valueOf().toString();
+      const returnValue = firstValue?.valueOf().toString('hex');
       return returnValue;
     } else {
       throw new Error('Error while retrieving the contract pause state');
@@ -240,7 +240,7 @@ export class Factory {
         .addArg(new AddressValue(treasuryAddress))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -266,7 +266,7 @@ export class Factory {
         .addArg(new StringValue(version))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 600000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -286,7 +286,7 @@ export class Factory {
         .addArg(new StringValue(version))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -306,7 +306,7 @@ export class Factory {
         .addArg(new AddressValue(address))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -326,7 +326,7 @@ export class Factory {
         .addArg(new AddressValue(address))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -347,7 +347,7 @@ export class Factory {
         .addArg(new StringValue(version))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 50000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -374,7 +374,7 @@ export class Factory {
         .addArg(new StringValue(upgradeVersion))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -397,7 +397,7 @@ export class Factory {
         .addArg(new AddressValue(childContractAddress))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -409,14 +409,18 @@ export class Factory {
    * @param senderAddress The address of the sender, must be the owner of the contract
    * Note: It change the ownership of the minter contract to the deployer of minter contract
    */
-  changeOwnership(senderAddress: IAddress): Transaction {
+  changeOwnership(
+    senderAddress: IAddress,
+    contractAddress: IAddress
+  ): Transaction {
     const changeOwnershipTx = new Transaction({
       value: 0,
       data: new ContractCallPayloadBuilder()
         .setFunction(new ContractFunction('changeOwnership'))
+        .addArg(new AddressValue(contractAddress))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -442,7 +446,7 @@ export class Factory {
         .addArg(new BigUIntValue(taxPercentage))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -452,14 +456,14 @@ export class Factory {
   /**
    * Pause contract transaction
    */
-  pause(): Transaction {
+  pause(senderAddress: IAddress): Transaction {
     const pauseTx = new Transaction({
       value: 0,
       data: new ContractCallPayloadBuilder()
         .setFunction(new ContractFunction('pause'))
         .build(),
-      sender: this.getContractAddress(),
-      gasLimit: 1000000,
+      sender: senderAddress,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -469,14 +473,14 @@ export class Factory {
   /**
    * Unpause contract transaction
    */
-  unpause(): Transaction {
+  unpause(senderAddress: IAddress): Transaction {
     const unpauseTx = new Transaction({
       value: 0,
       data: new ContractCallPayloadBuilder()
         .setFunction(new ContractFunction('unpause'))
         .build(),
-      sender: this.getContractAddress(),
-      gasLimit: 1000000,
+      sender: senderAddress,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
@@ -499,7 +503,7 @@ export class Factory {
         .addArg(new AddressValue(treasuryAddress))
         .build(),
       sender: senderAddress,
-      gasLimit: 1000000,
+      gasLimit: 10000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
