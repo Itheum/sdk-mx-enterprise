@@ -53,7 +53,7 @@ export class Factory {
   }
 
   /**
-   * Retrives the address of the minter smart contract based on the environment
+   * Retrives the address of the factory
    */
   getContractAddress(): IAddress {
     return this.contract.getAddress();
@@ -61,6 +61,7 @@ export class Factory {
 
   /**
    * Retrieves a boolean value indicating wheter the address is whitelisted or not
+   * If address is whitelisted it can deploy minter contracts
    * @param address The address to check
    */
   async viewAddressIsWhitelisted(address: IAddress): Promise<boolean> {
@@ -86,7 +87,7 @@ export class Factory {
   }
 
   /**
-   * Retrives address contracts
+   * Retrives all deployed contracts of address
    * @param address The address to check
    */
   async viewAddressContracts(address: IAddress): Promise<DeployedContract[]> {
@@ -119,7 +120,7 @@ export class Factory {
   }
 
   /**
-   * Retrives deployed contracts of factory
+   * Retrives all deployed contracts of the factory
    */
   async viewContracts(): Promise<DeployedContract[]> {
     const interaction = this.contract.methodsExplicit.getChildContracts();
@@ -149,7 +150,7 @@ export class Factory {
   }
 
   /**
-   * Retrives versions available
+   * Retrives versions available for deployment of the minter contract
    */
   async viewVersions(): Promise<string[]> {
     const interaction = this.contract.methodsExplicit.getVersions();
@@ -175,7 +176,7 @@ export class Factory {
   }
 
   /**
-   * Retrieves the smart contract pause state
+   * Retrieves the factory smart contract pause state
    */
   async viewContractPauseState(): Promise<boolean> {
     const interaction = this.contract.methodsExplicit.getPauseState();
@@ -226,8 +227,8 @@ export class Factory {
 
   /**
    *
-   * @param senderAddress The address of the sender, must be the owner of the contract
-   * @param treasuryAddress The address of the treasury
+   * @param senderAddress The address of the sender, must be the owner of the factory contract
+   * @param treasuryAddress The address of the treasury where the tax will be sent
    */
   initializeContract(
     senderAddress: IAddress,
