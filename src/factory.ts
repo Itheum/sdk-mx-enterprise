@@ -23,6 +23,7 @@ import {
 import factoryAbi from './abis/core-mx-minter-factory-sc.abi.json';
 import { DeployedContract } from './interfaces';
 import { checkVersionFormat } from './utils';
+import { ErrContractQuery, ErrNetworkConfig } from './errors';
 
 export class Factory {
   readonly contract: SmartContract;
@@ -37,7 +38,7 @@ export class Factory {
    */
   constructor(env: string, timeout = 10000) {
     if (!(env in EnvironmentsEnum)) {
-      throw new Error(
+      throw new ErrNetworkConfig(
         `Invalid environment: ${env}, Expected: 'devnet' | 'devnet2' | 'mainnet' | 'testnet'`
       );
     }
@@ -84,10 +85,10 @@ export class Factory {
       const returnValue = firstValue?.valueOf();
       return new BooleanValue(returnValue).valueOf();
     } else {
-      throw new Error('Error while retrieving the contract pause state');
-      // throw new ErrContractQuery(
-      //   'Error while retrieving the contract pause state'
-      // );
+      throw new ErrContractQuery(
+        'viewAddressIsWhitelisted',
+        returnCode.toString()
+      );
     }
   }
 
@@ -117,10 +118,7 @@ export class Factory {
       });
       return results;
     } else {
-      throw new Error('Error while retrieving the contract pause state');
-      // throw new ErrContractQuery(
-      //   'Error while retrieving the contract pause state'
-      // );
+      throw new ErrContractQuery('viewAddressContracts', returnCode.toString());
     }
   }
 
@@ -147,10 +145,7 @@ export class Factory {
       });
       return results;
     } else {
-      throw new Error('Error while retrieving the contract pause state');
-      // throw new ErrContractQuery(
-      //   'Error while retrieving the contract pause state'
-      // );
+      throw new ErrContractQuery('viewContracts', returnCode.toString());
     }
   }
 
@@ -173,10 +168,7 @@ export class Factory {
       });
       return results;
     } else {
-      throw new Error('Error while retrieving the contract pause state');
-      // throw new ErrContractQuery(
-      //   'Error while retrieving the contract pause state'
-      // );
+      throw new ErrContractQuery('viewVersions', returnCode.toString());
     }
   }
 
@@ -196,10 +188,9 @@ export class Factory {
       const returnValue = firstValue?.valueOf();
       return new BooleanValue(returnValue).valueOf();
     } else {
-      throw new Error('Error while retrieving the contract pause state');
-      // throw new ErrContractQuery(
-      //   'Error while retrieving the contract pause state'
-      // );
+      throw new ErrContractQuery(
+        'Error while retrieving the contract pause state'
+      );
     }
   }
 
@@ -223,10 +214,7 @@ export class Factory {
       const returnValue = firstValue?.valueOf().toString('hex');
       return returnValue;
     } else {
-      throw new Error('Error while retrieving the contract pause state');
-      // throw new ErrContractQuery(
-      //   'Error while retrieving the contract pause state'
-      // );
+      throw new ErrContractQuery('viewContractCode', returnCode.toString());
     }
   }
 
