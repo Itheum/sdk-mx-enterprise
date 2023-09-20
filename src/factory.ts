@@ -32,10 +32,15 @@ export class Factory {
 
   /**
    * Creates a new instance of the `Factory` class, which can be used to interact with factory
-   * @param env 'devnet' | 'mainnet' | 'testnet'
+   * @param env 'devnet' | 'devnet2' | 'mainnet' | 'testnet' basd on {@link EnvironmentsEnum}
    * @param timeout Timeout for the network provider (DEFAULT = 10000ms)
    */
   constructor(env: string, timeout = 10000) {
+    if (!(env in EnvironmentsEnum)) {
+      throw new Error(
+        `Invalid environment: ${env}, Expected: 'devnet' | 'devnet2' | 'mainnet' | 'testnet'`
+      );
+    }
     this.env = env;
     const networkConfig = networkConfiguration[env as EnvironmentsEnum];
     this.chainID = networkConfig.chainID;

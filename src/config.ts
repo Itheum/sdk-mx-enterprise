@@ -1,7 +1,8 @@
 export enum EnvironmentsEnum {
   devnet = 'devnet',
   testnet = 'testnet',
-  mainnet = 'mainnet'
+  mainnet = 'mainnet',
+  devnet2 = 'devnet2'
 }
 
 export interface Config {
@@ -26,24 +27,28 @@ const testnetNetworkConfig: Config = {
 
 export const itheumTokenIdentifier: { [key in EnvironmentsEnum]: string } = {
   devnet: 'ITHEUM-a61317',
+  devnet2: '',
   mainnet: 'ITHEUM-df6f26',
   testnet: ''
 };
 
 export const factoryContractAddress: { [key in EnvironmentsEnum]: string } = {
   devnet: 'erd1qqqqqqqqqqqqqpgqrfxfdtgv42sh7dmh3yqncrcjta7vnz55w3wq6tfgd8',
+  devnet2: '',
   mainnet: '',
   testnet: ''
 };
 
 export const apiConfiguration: { [key in EnvironmentsEnum]: string } = {
   devnet: 'https://devnet-api.multiversx.com',
+  devnet2: 'https://devnet2-api.multiversx.com',
   mainnet: 'https://api.multiversx.com',
   testnet: 'https://testnet-api.multiversx.com'
 };
 
 export const networkConfiguration: { [key in EnvironmentsEnum]: Config } = {
   devnet: devnetNetworkConfig,
+  devnet2: devnetNetworkConfig,
   mainnet: mainnetNetworkConfig,
   testnet: testnetNetworkConfig
 };
