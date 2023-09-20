@@ -15,6 +15,11 @@ const devnetNetworkConfig: Config = {
   networkProvider: 'https://devnet-api.multiversx.com'
 };
 
+const devnet2NetworkConfig: Config = {
+  chainID: 'D',
+  networkProvider: 'https://devnet2-api.multiversx.com'
+};
+
 const mainnetNetworkConfig: Config = {
   chainID: '1',
   networkProvider: 'https://api.multiversx.com'
@@ -48,7 +53,7 @@ export const apiConfiguration: { [key in EnvironmentsEnum]: string } = {
 
 export const networkConfiguration: { [key in EnvironmentsEnum]: Config } = {
   devnet: devnetNetworkConfig,
-  devnet2: devnetNetworkConfig,
+  devnet2: devnet2NetworkConfig,
   mainnet: mainnetNetworkConfig,
   testnet: testnetNetworkConfig
 };
