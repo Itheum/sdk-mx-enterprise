@@ -28,6 +28,10 @@
             "mutability": "mutable",
             "inputs": [
                 {
+                    "name": "require_whitelist",
+                    "type": "bool"
+                },
+                {
                     "name": "treasury_address",
                     "type": "Address"
                 }
@@ -161,6 +165,18 @@
             ]
         },
         {
+            "name": "seWhitelistEnabled",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "enabled",
+                    "type": "bool"
+                }
+            ],
+            "outputs": []
+        },
+        {
             "name": "pause",
             "onlyOwner": true,
             "mutability": "mutable",
@@ -209,6 +225,16 @@
                 {
                     "type": "variadic<bytes>",
                     "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getWhitelistEnabled",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "bool"
                 }
             ]
         },
@@ -396,6 +422,16 @@
                 {
                     "name": "tax_percentage",
                     "type": "BigUint",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "setWhitelistEnabledEvent",
+            "inputs": [
+                {
+                    "name": "state",
+                    "type": "bool",
                     "indexed": true
                 }
             ]

@@ -93,6 +93,28 @@ export class Factory {
   }
 
   /**
+   * Retrieves the whitelist enabled state of the factory
+   */
+  async viewWhitelistEnabledState(): Promise<boolean> {
+    const interaction = this.contract.methodsExplicit.getWhitelistEnabled();
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+    if (returnCode.isSuccess()) {
+      const returnValue = firstValue?.valueOf();
+      return new BooleanValue(returnValue).valueOf();
+    } else {
+      throw new ErrContractQuery(
+        'viewWhitelistEnabledState',
+        returnCode.toString()
+      );
+    }
+  }
+  /**
    * Retrives all deployed contracts of address
    * @param address The address to check
    */
@@ -221,16 +243,19 @@ export class Factory {
   /**
    *
    * @param senderAddress The address of the sender, must be the owner of the factory contract
+   * @param require_whitelist A boolean value indicating if the factory will require whitelist
    * @param treasuryAddress The address of the treasury where the tax will be sent
    */
   initializeContract(
     senderAddress: IAddress,
+    require_whitelist: boolean,
     treasuryAddress: IAddress
   ): Transaction {
     const initializeContractTx = new Transaction({
       value: 0,
       data: new ContractCallPayloadBuilder()
         .setFunction(new ContractFunction('initializeContract'))
+        .addArg(new BooleanValue(require_whitelist))
         .addArg(new AddressValue(treasuryAddress))
         .build(),
       sender: senderAddress,
@@ -445,6 +470,45 @@ export class Factory {
       chainID: this.chainID
     });
     return setTaxForChildContractTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   */
+  enableWhitelist(senderAddress: IAddress): Transaction {
+    const enableWhitelistTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('seWhitelistEnabled'))
+        .addArg(new BooleanValue(true))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 10000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+
+    return enableWhitelistTx;
+  }
+
+  /**
+   *
+   * @param senderAddress The address of the sender, must be the owner of the contract
+   */
+  disableWhitelist(senderAddress: IAddress): Transaction {
+    const disableWhitelistTx = new Transaction({
+      value: 0,
+      data: new ContractCallPayloadBuilder()
+        .setFunction(new ContractFunction('seWhitelistEnabled'))
+        .addArg(new BooleanValue(false))
+        .build(),
+      sender: senderAddress,
+      gasLimit: 10000000,
+      receiver: this.getContractAddress(),
+      chainID: this.chainID
+    });
+    return disableWhitelistTx;
   }
 
   /**
