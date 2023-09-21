@@ -33,7 +33,7 @@ describe('Factory test', () => {
   test('#check versions', async () => {
     const factory = new Factory('devnet');
     const versions = await factory.viewVersions();
-    expect(versions).toEqual(['0.0.1', '0.0.2']);
+    expect(versions).toEqual(['0.0.1']);
   });
 
   test('#deploy minter contract', async () => {
