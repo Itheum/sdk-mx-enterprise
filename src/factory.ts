@@ -32,7 +32,7 @@ export class Factory {
   readonly env: string;
 
   /**
-   * Creates a new instance of the `Factory` class, which can be used to interact with factory
+   * Creates a new instance of the `Factory` class, which can be used to interact with the factory smart contract
    * @param env 'devnet' | 'devnet2' | 'mainnet' | 'testnet' basd on {@link EnvironmentsEnum}
    * @param timeout Timeout for the network provider (DEFAULT = 10000ms)
    */
@@ -59,7 +59,7 @@ export class Factory {
   }
 
   /**
-   * Retrives the address of the factory
+   * Retrives the address of the factory smart contract
    */
   getContractAddress(): IAddress {
     return this.contract.getAddress();
@@ -67,8 +67,8 @@ export class Factory {
 
   /**
    * Retrieves a boolean value indicating wheter the address is whitelisted or not
-   * If address is whitelisted it can deploy minter contracts
    * @param address The address to check
+   * If address is whitelisted it can deploy minter contracts
    */
   async viewAddressIsWhitelisted(address: IAddress): Promise<boolean> {
     const interaction = this.contract.methodsExplicit.getIsWhitelisted([
@@ -93,7 +93,7 @@ export class Factory {
   }
 
   /**
-   * Retrieves the whitelist enabled state of the factory
+   * Retrieves a boolean value indicating wheter the factory smart contract requires whitelist or not
    */
   async viewWhitelistEnabledState(): Promise<boolean> {
     const interaction = this.contract.methodsExplicit.getWhitelistEnabled();
@@ -115,7 +115,7 @@ export class Factory {
     }
   }
   /**
-   * Retrives all deployed contracts of address
+   * Retrives all deployed contracts of address parameter
    * @param address The address to check
    */
   async viewAddressContracts(address: IAddress): Promise<DeployedContract[]> {
@@ -145,7 +145,7 @@ export class Factory {
   }
 
   /**
-   * Retrives all deployed contracts of the factory
+   * Retrives all deployed contracts of the factory smart contract
    */
   async viewContracts(): Promise<DeployedContract[]> {
     const interaction = this.contract.methodsExplicit.getChildContracts();
@@ -172,7 +172,7 @@ export class Factory {
   }
 
   /**
-   * Retrives versions available for deployment of the minter contract
+   * Retrives an array of versions available for deployment of the minter contract
    */
   async viewVersions(): Promise<string[]> {
     const interaction = this.contract.methodsExplicit.getVersions();
@@ -195,7 +195,7 @@ export class Factory {
   }
 
   /**
-   * Retrieves the factory smart contract pause state
+   * Retrieves a boolean value indicating wheter the contract is paused or not
    */
   async viewContractPauseState(): Promise<boolean> {
     const interaction = this.contract.methodsExplicit.getPauseState();
@@ -217,7 +217,7 @@ export class Factory {
   }
 
   /**
-   * Retrieves the code in hex of minter smart contract based on version
+   * Retrieves the code in hex encoding of minter smart contract based on version parameter
    * @param version The version of the minter smart contract
    */
   async viewContractCode(version: string): Promise<string> {
@@ -401,7 +401,7 @@ export class Factory {
   }
 
   /**
-   *
+   * Returns a transaction to upgrade the child contract to the last version available
    * @param senderAddress The address of the deployer of the minter contract
    * @param childContractAddress The address of the child contract
    */
@@ -424,7 +424,7 @@ export class Factory {
   }
 
   /**
-   *
+   * Returns a transaction to change the ownership of the minter contract to the deployer of minter contract
    * @param senderAddress The address of the sender, must be the owner of the contract
    * Note: It change the ownership of the minter contract to the deployer of minter contract
    */
