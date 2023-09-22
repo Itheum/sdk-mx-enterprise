@@ -33,7 +33,7 @@ export class Factory {
 
   /**
    * Creates a new instance of the `Factory` class, which can be used to interact with the factory smart contract
-   * @param env 'devnet' | 'devnet2' | 'mainnet' | 'testnet' basd on {@link EnvironmentsEnum}
+   * @param env 'devnet' | 'devnet2' | 'mainnet' | 'testnet' based on {@link EnvironmentsEnum}
    * @param timeout Timeout for the network provider (DEFAULT = 10000ms)
    */
   constructor(env: string, timeout = 10000) {
