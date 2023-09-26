@@ -11,6 +11,7 @@ import {
   ResultsParser,
   SmartContract,
   StringValue,
+  TokenIdentifierValue,
   Transaction
 } from '@multiversx/sdk-core/out';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
@@ -249,7 +250,9 @@ export class Factory {
   initializeContract(
     senderAddress: IAddress,
     require_whitelist: boolean,
-    treasuryAddress: IAddress
+    treasuryAddress: IAddress,
+    claimsContractAddress: IAddress,
+    claimsTokenIdentifier: string
   ): Transaction {
     const initializeContractTx = new Transaction({
       value: 0,
@@ -257,9 +260,11 @@ export class Factory {
         .setFunction(new ContractFunction('initializeContract'))
         .addArg(new BooleanValue(require_whitelist))
         .addArg(new AddressValue(treasuryAddress))
+        .addArg(new AddressValue(claimsContractAddress))
+        .addArg(new TokenIdentifierValue(claimsTokenIdentifier))
         .build(),
       sender: senderAddress,
-      gasLimit: 10000000,
+      gasLimit: 20000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
