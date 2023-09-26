@@ -12,7 +12,8 @@ import {
   SmartContract,
   StringValue,
   TokenIdentifierValue,
-  Transaction
+  Transaction,
+  U32Value
 } from '@multiversx/sdk-core/out';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import {
@@ -96,7 +97,7 @@ export class Factory {
   /**
    * Retrieves a boolean value indicating wheter the factory smart contract requires whitelist or not
    */
-  async viewWhitelistEnabledState(): Promise<boolean> {
+  async viewWhitelistState(): Promise<boolean> {
     const interaction = this.contract.methodsExplicit.getWhitelistEnabled();
     const query = interaction.buildQuery();
     const queryResponse = await this.networkProvider.queryContract(query);
@@ -148,8 +149,11 @@ export class Factory {
   /**
    * Retrives all deployed contracts of the factory smart contract
    */
-  async viewContracts(): Promise<DeployedContract[]> {
-    const interaction = this.contract.methodsExplicit.getChildContracts();
+  async viewContracts(from: number, to: number): Promise<DeployedContract[]> {
+    const interaction = this.contract.methodsExplicit.getChildContracts([
+      new U32Value(from),
+      new U32Value(to)
+    ]);
     const query = interaction.buildQuery();
     const queryResponse = await this.networkProvider.queryContract(query);
     const endpointDefinition = interaction.getEndpoint();
@@ -398,29 +402,6 @@ export class Factory {
         .setFunction(new ContractFunction('upgradeChildContract'))
         .addArg(new AddressValue(childContractAddress))
         .addArg(new StringValue(upgradeVersion))
-        .build(),
-      sender: senderAddress,
-      gasLimit: 10000000,
-      receiver: this.getContractAddress(),
-      chainID: this.chainID
-    });
-    return upgradeChildContractTx;
-  }
-
-  /**
-   * Returns a transaction to upgrade the child contract to the last version available
-   * @param senderAddress The address of the deployer of the minter contract
-   * @param childContractAddress The address of the child contract
-   */
-  upgradeLastVersion(
-    senderAddress: IAddress,
-    childContractAddress: IAddress
-  ): Transaction {
-    const upgradeChildContractTx = new Transaction({
-      value: 0,
-      data: new ContractCallPayloadBuilder()
-        .setFunction(new ContractFunction('upgradeLastVersion'))
-        .addArg(new AddressValue(childContractAddress))
         .build(),
       sender: senderAddress,
       gasLimit: 10000000,
