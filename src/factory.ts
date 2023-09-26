@@ -246,6 +246,8 @@ export class Factory {
    * @param senderAddress The address of the sender, must be the owner of the factory contract
    * @param require_whitelist A boolean value indicating if the factory will require whitelist
    * @param treasuryAddress The address of the treasury where the tax will be sent
+   * @param claimsContractAddress The address of the claims contract
+   * @param claimsTokenIdentifier The token identifier of the claims contract
    */
   initializeContract(
     senderAddress: IAddress,
