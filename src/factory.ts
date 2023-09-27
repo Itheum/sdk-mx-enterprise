@@ -250,6 +250,7 @@ export class Factory {
    * @param senderAddress The address of the sender, must be the owner of the factory contract
    * @param require_whitelist A boolean value indicating if the factory will require whitelist
    * @param treasuryAddress The address of the treasury where the tax will be sent
+   * @param tax The tax percentage to set in the contract ( minter contract will send the tax cut to treasury address)
    * @param claimsContractAddress The address of the claims contract
    * @param claimsTokenIdentifier The token identifier of the claims contract
    */
@@ -257,6 +258,7 @@ export class Factory {
     senderAddress: IAddress,
     require_whitelist: boolean,
     treasuryAddress: IAddress,
+    tax: number,
     claimsContractAddress: IAddress,
     claimsTokenIdentifier: string
   ): Transaction {
@@ -266,6 +268,7 @@ export class Factory {
         .setFunction(new ContractFunction('initializeContract'))
         .addArg(new BooleanValue(require_whitelist))
         .addArg(new AddressValue(treasuryAddress))
+        .addArg(new BigUIntValue(tax))
         .addArg(new AddressValue(claimsContractAddress))
         .addArg(new TokenIdentifierValue(claimsTokenIdentifier))
         .build(),
@@ -386,7 +389,7 @@ export class Factory {
 
   /**
    *
-   * @param senderAddress The address of the sender, must be the owner of the contract
+   * @param senderAddress The address of the sender, must be the owner of the factory or owner of the minter contract
    * @param childContractAddress The address of the child contract
    * @param upgradeVersion The version of the minter contract code to upgrade
    */
@@ -437,19 +440,13 @@ export class Factory {
   /**
    *
    * @param senderAddress The address of the sender, must be the owner of the contract
-   * @param childContractAddress The address of the child contract
-   * @param taxPercentage The tax percentage to set (e.g. 100% = 10000)
+   * @param taxPercentage The tax percentage to set in the contract ( minter contract will send the tax cut to treasury address)
    */
-  setTaxForChildContract(
-    senderAddress: IAddress,
-    childContractAddress: IAddress,
-    taxPercentage: number
-  ): Transaction {
-    const setTaxForChildContractTx = new Transaction({
+  setTax(senderAddress: IAddress, taxPercentage: number): Transaction {
+    const setTaxTx = new Transaction({
       value: 0,
       data: new ContractCallPayloadBuilder()
-        .setFunction(new ContractFunction('setTaxForChildContract'))
-        .addArg(new AddressValue(childContractAddress))
+        .setFunction(new ContractFunction('setTax'))
         .addArg(new BigUIntValue(taxPercentage))
         .build(),
       sender: senderAddress,
@@ -457,7 +454,8 @@ export class Factory {
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
-    return setTaxForChildContractTx;
+
+    return setTaxTx;
   }
 
   /**
