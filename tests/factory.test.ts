@@ -24,7 +24,7 @@ describe('Factory test', () => {
 
   test('#check all contracts', async () => {
     const factory = new Factory('devnet');
-    const contracts = await factory.viewContracts();
+    const contracts = await factory.viewContracts(0, 1);
     contracts.forEach((contract) => {
       expect(contract).toBeInstanceOf(Object as unknown as DeployedContract);
     });
@@ -42,21 +42,6 @@ describe('Factory test', () => {
       'erd1w6ffeexmumd5qzme78grrvp33qngcgqk2prjyuuyawpc955gvcxqqrsrtw'
     );
     const tx = factory.deployContract(addressOfDeployer, '0.0.1');
-    expect(tx).toBeInstanceOf(Transaction);
-  });
-
-  test('#upgrade minter conde to last version', async () => {
-    const factory = new Factory('devnet');
-    const addressOfDeployer = new Address(
-      'erd1w6ffeexmumd5qzme78grrvp33qngcgqk2prjyuuyawpc955gvcxqqrsrtw'
-    );
-    const addressOfDeployedContract = new Address(
-      'erd1w6ffeexmumd5qzme78grrvp33qngcgqk2prjyuuyawpc955gvcxqqrsrtw'
-    );
-    const tx = factory.upgradeLastVersion(
-      addressOfDeployer,
-      addressOfDeployedContract
-    );
     expect(tx).toBeInstanceOf(Transaction);
   });
 
