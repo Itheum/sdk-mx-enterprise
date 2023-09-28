@@ -13,7 +13,7 @@
         },
         "framework": {
             "name": "multiversx-sc",
-            "version": "0.43.2"
+            "version": "0.43.4"
         }
     },
     "name": "MinterFactory",
@@ -34,6 +34,18 @@
                 {
                     "name": "treasury_address",
                     "type": "Address"
+                },
+                {
+                    "name": "tax",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "claims_contract_address",
+                    "type": "Address"
+                },
+                {
+                    "name": "claims_token_identifier",
+                    "type": "TokenIdentifier"
                 }
             ],
             "outputs": []
@@ -107,7 +119,6 @@
         },
         {
             "name": "upgradeChildContract",
-            "onlyOwner": true,
             "mutability": "mutable",
             "inputs": [
                 {
@@ -122,12 +133,13 @@
             "outputs": []
         },
         {
-            "name": "upgradeLastVersion",
+            "name": "setTax",
+            "onlyOwner": true,
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "address",
-                    "type": "Address"
+                    "name": "tax",
+                    "type": "BigUint"
                 }
             ],
             "outputs": []
@@ -143,26 +155,6 @@
                 }
             ],
             "outputs": []
-        },
-        {
-            "name": "setTaxForChildContract",
-            "onlyOwner": true,
-            "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "contract_address",
-                    "type": "Address"
-                },
-                {
-                    "name": "tax_percentage",
-                    "type": "BigUint"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
         },
         {
             "name": "seWhitelistEnabled",
@@ -249,23 +241,42 @@
             ]
         },
         {
-            "name": "getChildContracts",
-            "mutability": "readonly",
-            "inputs": [],
-            "outputs": [
-                {
-                    "type": "variadic<DeployedContract>",
-                    "multi_result": true
-                }
-            ]
-        },
-        {
             "name": "getTreasuryAddress",
             "mutability": "readonly",
             "inputs": [],
             "outputs": [
                 {
                     "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getTax",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getClaimsContractAddress",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getClaimsTokenIdentifier",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "TokenIdentifier"
                 }
             ]
         },
@@ -291,6 +302,25 @@
                 {
                     "name": "address",
                     "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "List<DeployedContract>"
+                }
+            ]
+        },
+        {
+            "name": "getChildContracts",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "from",
+                    "type": "u32"
+                },
+                {
+                    "name": "to",
+                    "type": "u32"
                 }
             ],
             "outputs": [

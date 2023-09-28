@@ -38,7 +38,7 @@ export const itheumTokenIdentifier: { [key in EnvironmentsEnum]: string } = {
 };
 
 export const factoryContractAddress: { [key in EnvironmentsEnum]: string } = {
-  devnet: 'erd1qqqqqqqqqqqqqpgqfamd0z208q0clr9n4nxdat5ufu8p73an8yps9xzg8n',
+  devnet: 'erd1qqqqqqqqqqqqqpgqgsga706unmtlr43gk07wp2rkw0twumfr8ypsrmat9j',
   devnet2: '',
   mainnet: '',
   testnet: ''
