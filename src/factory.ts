@@ -349,13 +349,13 @@ export class Factory {
   /**
    *
    * @param senderAddress The address of the sender, must be the owner of the contract
-   * @param address The address to delist
+   * @param address The address to remove from whitelist
    */
-  delist(senderAddress: IAddress, address: IAddress): Transaction {
+  removeWhitelist(senderAddress: IAddress, address: IAddress): Transaction {
     const delistTx = new Transaction({
       value: 0,
       data: new ContractCallPayloadBuilder()
-        .setFunction(new ContractFunction('delist'))
+        .setFunction(new ContractFunction('removeWhitelist'))
         .addArg(new AddressValue(address))
         .build(),
       sender: senderAddress,
