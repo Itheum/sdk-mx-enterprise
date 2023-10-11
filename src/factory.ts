@@ -95,6 +95,46 @@ export class Factory {
   }
 
   /**
+   * Retrives the tax percentage used for the factory smart contract
+   */
+  async viewTaxPercentage(): Promise<number> {
+    const interaction = this.contract.methodsExplicit.getTax();
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+    if (returnCode.isSuccess()) {
+      const returnValue = firstValue?.valueOf();
+      return returnValue.toNumber() / 100;
+    } else {
+      throw new ErrContractQuery('viewTaxPercentage', returnCode.toString());
+    }
+  }
+
+  /**
+   * Retrieves the factory treasury address
+   */
+  async viewTreasuryAddress(): Promise<IAddress> {
+    const interaction = this.contract.methodsExplicit.getTreasuryAddress();
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+    if (returnCode.isSuccess()) {
+      const returnValue = firstValue?.valueOf();
+      return new Address(returnValue);
+    } else {
+      throw new ErrContractQuery('viewTreasuryAddress', returnCode.toString());
+    }
+  }
+
+  /**
    * Retrieves a boolean value indicating wheter the factory smart contract requires whitelist or not
    */
   async viewWhitelistState(): Promise<boolean> {
@@ -242,6 +282,54 @@ export class Factory {
       return returnValue;
     } else {
       throw new ErrContractQuery('viewContractCode', returnCode.toString());
+    }
+  }
+
+  /**
+   * Retrieves the address of the claims contract used by the factory smart contract
+   */
+  async viewClaimsContractAddress(): Promise<IAddress> {
+    const interaction =
+      this.contract.methodsExplicit.getClaimsContractAddress();
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+    if (returnCode.isSuccess()) {
+      const returnValue = firstValue?.valueOf();
+      return new Address(returnValue);
+    } else {
+      throw new ErrContractQuery(
+        'viewClaimsContractAddress',
+        returnCode.toString()
+      );
+    }
+  }
+
+  /**
+   * Retrieves the token identifier of the claims contract used by the factory smart contract
+   */
+  async viewClaimsTokenIdentifier(): Promise<string> {
+    const interaction =
+      this.contract.methodsExplicit.getClaimsTokenIdentifier();
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+    if (returnCode.isSuccess()) {
+      const returnValue = firstValue?.valueOf();
+      return returnValue.toString();
+    } else {
+      throw new ErrContractQuery(
+        'viewClaimsTokenIdentifier',
+        returnCode.toString()
+      );
     }
   }
 

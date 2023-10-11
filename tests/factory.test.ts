@@ -8,6 +8,30 @@ describe('Factory test', () => {
     expect(address).toBeInstanceOf(Address);
   });
 
+  test('#check factory tax percentage', async () => {
+    const factory = new Factory('devnet');
+    const taxPercentage = await factory.viewTaxPercentage();
+    expect(typeof taxPercentage === 'number').toBe(true);
+  });
+
+  test('#check treasury address', async () => {
+    const factory = new Factory('devnet');
+    const treasuryAddress = await factory.viewTreasuryAddress();
+    expect(treasuryAddress).toBeInstanceOf(Address);
+  });
+
+  test('#check claims contract address', async () => {
+    const factory = new Factory('devnet');
+    const claimsAddress = await factory.viewClaimsContractAddress();
+    expect(claimsAddress).toBeInstanceOf(Address);
+  });
+
+  test('#check claims token identifier', async () => {
+    const factory = new Factory('devnet');
+    const claimsTokenIdentifier = await factory.viewClaimsTokenIdentifier();
+    expect(typeof claimsTokenIdentifier === 'string').toBe(true);
+  });
+
   test('#check if address is whitelisted', async () => {
     const factory = new Factory('devnet');
     const isWhitelisted = await factory.viewAddressIsWhitelisted(
