@@ -90,7 +90,6 @@ describe('Factory test', () => {
   test('#check contracts deployed by factory', async () => {
     const factory = new Factory('devnet');
     const contracts = await factory.viewContracts(0, 1); //from = 0 , to = 1
-    console.log(contracts);
     contracts.forEach((contract) => {
       expect(contract).toBeInstanceOf(Object as unknown as DeployedContract);
     });
@@ -99,7 +98,7 @@ describe('Factory test', () => {
   test('#check versions available in factory of minter contract', async () => {
     const factory = new Factory('devnet');
     const versions = await factory.viewVersions();
-    expect(versions).toEqual(['0.0.1']);
+    expect(versions).toEqual(['0.0.1', '0.0.2']);
   });
 
   test('#deploy minter contract', async () => {
