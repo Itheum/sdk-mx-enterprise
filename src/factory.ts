@@ -495,7 +495,7 @@ export class Factory {
         .addArg(new StringValue(upgradeVersion))
         .build(),
       sender: senderAddress,
-      gasLimit: 10000000,
+      gasLimit: 100000000,
       receiver: this.getContractAddress(),
       chainID: this.chainID
     });
