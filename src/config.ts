@@ -25,13 +25,13 @@ const testnetNetworkConfig: Config = {
 };
 
 export const itheumTokenIdentifier: { [key in EnvironmentsEnum]: string } = {
-  devnet: 'ITHEUM-a61317',
+  devnet: 'ITHEUM-fce905',
   mainnet: 'ITHEUM-df6f26',
   testnet: ''
 };
 
 export const factoryContractAddress: { [key in EnvironmentsEnum]: string } = {
-  devnet: 'erd1qqqqqqqqqqqqqpgqgsga706unmtlr43gk07wp2rkw0twumfr8ypsrmat9j',
+  devnet: 'erd1qqqqqqqqqqqqqpgqwcjfrnk2sucvu5mnvuucsyyqgd9rn3ps8ypsde9tr9',
   mainnet: '',
   testnet: ''
 };
