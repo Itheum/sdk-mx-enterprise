@@ -56,7 +56,7 @@ describe('Factory test', () => {
 
   test('#view contract code of minter contract by version', async () => {
     const factory = new Factory('devnet');
-    const code = await factory.viewContractCode('0.0.1');
+    const code = await factory.viewContractCode('1.0.0');
     expect(typeof code === 'string' && code.length > 0).toBe(true);
   });
 
@@ -71,7 +71,7 @@ describe('Factory test', () => {
     const tx = factory.upgradeChildContract(
       addressOfDeployer, // or owner of factory contract
       deployedMinterContract,
-      '0.0.1'
+      '1.0.0'
     );
 
     expect(tx).toBeInstanceOf(Transaction);
@@ -98,7 +98,7 @@ describe('Factory test', () => {
   test('#check versions available in factory of minter contract', async () => {
     const factory = new Factory('devnet');
     const versions = await factory.viewVersions();
-    expect(versions).toEqual(['0.0.1', '0.0.2']);
+    expect(versions).toEqual(['1.0.0']);
   });
 
   test('#deploy minter contract', async () => {
@@ -106,7 +106,7 @@ describe('Factory test', () => {
     const addressOfDeployer = new Address(
       'erd1w6ffeexmumd5qzme78grrvp33qngcgqk2prjyuuyawpc955gvcxqqrsrtw'
     );
-    const tx = factory.deployContract(addressOfDeployer, '0.0.1');
+    const tx = factory.deployContract(addressOfDeployer, '1.0.0');
     expect(tx).toBeInstanceOf(Transaction);
   });
 
