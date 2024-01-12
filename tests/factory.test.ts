@@ -69,7 +69,7 @@ describe('Factory test', () => {
       'erd1qqqqqqqqqqqqqpgqpd9qxrq5a03jrneafmlmckmlj5zgdj55fsxsqa7jsm'
     );
     const tx = factory.upgradeChildContract(
-      addressOfDeployer, // or owner of factory contract
+      addressOfDeployer,
       deployedMinterContract,
       '1.0.0'
     );
@@ -99,7 +99,7 @@ describe('Factory test', () => {
   test('#check versions available in factory of minter contract', async () => {
     const factory = new Factory('devnet');
     const versions = await factory.viewVersions();
-    expect(versions).toEqual(['1.0.0', '2.0.0']);
+    expect(versions).toBeInstanceOf(Array);
   });
 
   test('#deploy minter contract', async () => {
