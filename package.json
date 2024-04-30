@@ -1,6 +1,6 @@
 {
   "name": "@itheum/sdk-mx-enterprise",
-  "version": "0.2.0",
+  "version": "0.2.0-semantic-release",
   "description": "SDK for Itheum's Enterprise technology",
   "main": "out/index.js",
   "types": "out/index.d.js",
@@ -11,7 +11,8 @@
     "test": "jest --runInBand --forceExit",
     "lint": "tslint --project .",
     "build": "tsc -p tsconfig.json",
-    "prepare": "npm run build"
+    "prepare": "npm run build && husky install",
+    "postinstall": "husky install && npx husky add .husky/commit-msg 'npx --no-install commitlint --edit $1' && npx husky add .husky/pre-commit 'npm test'"
   },
   "author": "Itheum Protocol",
   "license": "GPL-3.0-only",
@@ -20,6 +21,9 @@
     "@multiversx/sdk-network-providers": "2.2.1"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "18.4.4",
+    "commitlint": "18.4.4",
+    "husky": "8.0.3",
     "@types/jest": "29.5.11",
     "jest": "29.7.0",
     "ts-jest": "29.1.2",
