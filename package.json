@@ -1,6 +1,6 @@
 {
   "name": "@itheum/sdk-mx-enterprise",
-  "version": "0.3.0-semantic-release",
+  "version": "0.3.0",
   "description": "SDK for Itheum's Enterprise technology",
   "main": "out/index.js",
   "types": "out/index.d.js",
